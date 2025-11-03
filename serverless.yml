@@ -3,7 +3,7 @@ service: chinawok-analitica
 
 provider:
   name: aws
-  runtime: python3.12  # Cambiar de 3.13 a 3.12
+  runtime: python3.12
   memorySize: 512
   timeout: 300
   region: us-east-1
