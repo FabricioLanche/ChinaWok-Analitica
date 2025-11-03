@@ -1,0 +1,143 @@
+{
+	"info": {
+		"_postman_id": "285064f4-e402-4fe1-8ccb-a8749e554015",
+		"name": "ChinaWok-Analitica",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "43509885",
+		"_collection_link": "https://dark-sunset-246817.postman.co/workspace/DBP~16941fd4-2fc3-45ac-91eb-0146a2c045ea/collection/43509885-285064f4-e402-4fe1-8ccb-a8749e554015?action=share&source=collection_link&creator=43509885"
+	},
+	"item": [
+		{
+			"name": "Productos Más Vendidos",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"local_id\": \"LOCAL-0001\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://rdt0bqcau1.execute-api.us-east-1.amazonaws.com/dev/analitica/productos-vendidos",
+					"protocol": "https",
+					"host": [
+						"rdt0bqcau1",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"dev",
+						"analitica",
+						"productos-vendidos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mejor Personal",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"local_id\": \"LOCAL-0001\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://rdt0bqcau1.execute-api.us-east-1.amazonaws.com/dev/analitica/mejor-personal",
+					"protocol": "https",
+					"host": [
+						"rdt0bqcau1",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"dev",
+						"analitica",
+						"mejor-personal"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Record Diario",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"local_id\": \"LOCAL-0001\",\r\n  \"year\": 2025,\r\n  \"month\": 11\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://rdt0bqcau1.execute-api.us-east-1.amazonaws.com/dev/analitica/record-diario",
+					"protocol": "https",
+					"host": [
+						"rdt0bqcau1",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"dev",
+						"analitica",
+						"record-diario"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Estadisticas generales",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"local_id\": \"LOCAL-0001\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://rdt0bqcau1.execute-api.us-east-1.amazonaws.com/dev/analitica/estadisticas-generales",
+					"protocol": "https",
+					"host": [
+						"rdt0bqcau1",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"dev",
+						"analitica",
+						"estadisticas-generales"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
