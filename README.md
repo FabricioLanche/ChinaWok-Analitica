@@ -28,14 +28,14 @@ Si no existe este archivo, el sistema usará **us-east-1** por defecto.
 
 ### 3. Variables de Entorno (.env)
 
-Configura las siguientes variables:
+Copia `.env.example` a `.env` y configura:
 
 - **AWS_ACCOUNT_ID**: Tu Account ID de AWS
 - **ATHENA_DATABASE**: Nombre de la base de datos en Glue/Athena
 - **ATHENA_OUTPUT_LOCATION**: Bucket S3 para resultados de queries
 - **ATHENA_WORKGROUP**: Workgroup de Athena (primary por defecto)
 
-**Nota**: La variable `SERVERLESS_ORG` está **hardcoded en serverless.yml** porque Serverless Framework no carga el `.env` para el campo `org` en tiempo de login.
+**Nota**: La organización de Serverless (`org: flanche`) está configurada directamente en `serverless.yml`.
 
 ## Despliegue
 
@@ -53,21 +53,7 @@ serverless deploy
 serverless deploy function -f productosVendidos
 ```
 
-## Troubleshooting
-
-### Error: "You are not a member of the Org"
-- Verifica que la org en `serverless.yml` coincida con tu cuenta de Serverless
-- Ejecuta `serverless login` y confirma tu usuario
-- Revisa el archivo `~/.serverlessrc` para ver qué usuario está activo
-
-## Permisos IAM (LabRole)
-
-El LabRole debe tener permisos para:
-- **Athena**: StartQueryExecution, GetQueryExecution, GetQueryResults
-- **Glue**: GetDatabase, GetTable, GetPartitions
-- **S3**: GetObject, PutObject en buckets de datos y resultados
-
-## Ejemplos de Postman
+## Lambdas Disponibles
 
 Después del despliegue, obtendrás las URLs de los endpoints. Ejemplo:
 ```

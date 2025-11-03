@@ -1,6 +1,4 @@
-useDotenv: true
-
-org: ${env:SERVERLESS_ORG}
+org: flanche
 service: chinawok-analitica
 
 provider:
@@ -8,7 +6,7 @@ provider:
   runtime: python3.13
   memorySize: 512
   timeout: 300
-  region: us-east-1  # Region por defecto si no está en ~/.aws/config
+  region: us-east-1
   
   environment:
     ATHENA_DATABASE: ${env:ATHENA_DATABASE, 'chinawok_analytics'}
@@ -60,7 +58,6 @@ functions:
           cors: true
 
 plugins:
-  - serverless-dotenv-plugin
   - serverless-python-requirements
 
 custom:
