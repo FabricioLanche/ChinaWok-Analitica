@@ -3,7 +3,7 @@ service: chinawok-analitica
 
 provider:
   name: aws
-  runtime: python3.13
+  runtime: python3.12  # Cambiar de 3.13 a 3.12
   memorySize: 512
   timeout: 300
   region: us-east-1
@@ -59,7 +59,7 @@ functions:
 
 custom:
   pythonRequirements:
-    dockerizePip: false
+    dockerizePip: true  # Cambiar a true
     slim: true
 
 package:
