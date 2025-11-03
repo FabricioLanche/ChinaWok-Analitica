@@ -28,67 +28,37 @@ Si no existe este archivo, el sistema usará **us-east-1** por defecto.
 
 ### 3. Variables de Entorno (.env)
 
-Copia `.env.example` a `.env` y configura:
+Configura las siguientes variables:
 
 - **AWS_ACCOUNT_ID**: Tu Account ID de AWS
-- **SERVERLESS_ORG**: Tu organización en Serverless Framework
 - **ATHENA_DATABASE**: Nombre de la base de datos en Glue/Athena
 - **ATHENA_OUTPUT_LOCATION**: Bucket S3 para resultados de queries
 - **ATHENA_WORKGROUP**: Workgroup de Athena (primary por defecto)
-- **DEFAULT_LOCAL_ID**: Local ID por defecto para testing
 
-## Lambdas Disponibles
-
-### 1. Productos Más Vendidos
-**Endpoint**: `POST /analitica/productos-vendidos`
-
-```json
-{
-  "local_id": "LOCAL-0001"
-}
-```
-
-### 2. Mejor Personal
-**Endpoint**: `POST /analitica/mejor-personal`
-
-```json
-{
-  "local_id": "LOCAL-0001"
-}
-```
-
-### 3. Récord Diario
-**Endpoint**: `POST /analitica/record-diario`
-
-```json
-{
-  "local_id": "LOCAL-0001",
-  "year": 2025,
-  "month": 1
-}
-```
-
-### 4. Estadísticas Generales
-**Endpoint**: `POST /analitica/estadisticas-generales`
-
-```json
-{
-  "local_id": "LOCAL-0001"
-}
-```
+**Nota**: La variable `SERVERLESS_ORG` está **hardcoded en serverless.yml** porque Serverless Framework no carga el `.env` para el campo `org` en tiempo de login.
 
 ## Despliegue
 
 ```bash
-# Instalar dependencias
+# 1. Iniciar sesión en Serverless (solo primera vez)
+serverless login
+
+# 2. Instalar dependencias
 npm install
 
-# Desplegar a AWS
+# 3. Desplegar a AWS
 serverless deploy
 
-# Desplegar función específica
+# 4. Desplegar función específica
 serverless deploy function -f productosVendidos
 ```
+
+## Troubleshooting
+
+### Error: "You are not a member of the Org"
+- Verifica que la org en `serverless.yml` coincida con tu cuenta de Serverless
+- Ejecuta `serverless login` y confirma tu usuario
+- Revisa el archivo `~/.serverlessrc` para ver qué usuario está activo
 
 ## Permisos IAM (LabRole)
 
@@ -96,3 +66,13 @@ El LabRole debe tener permisos para:
 - **Athena**: StartQueryExecution, GetQueryExecution, GetQueryResults
 - **Glue**: GetDatabase, GetTable, GetPartitions
 - **S3**: GetObject, PutObject en buckets de datos y resultados
+
+## Ejemplos de Postman
+
+Después del despliegue, obtendrás las URLs de los endpoints. Ejemplo:
+```
+POST /analitica/productos-vendidos
+{
+  "local_id": "LOCAL-0001"
+}
+```

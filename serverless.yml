@@ -1,3 +1,5 @@
+useDotenv: true
+
 org: ${env:SERVERLESS_ORG}
 service: chinawok-analitica
 
@@ -58,6 +60,7 @@ functions:
           cors: true
 
 plugins:
+  - serverless-dotenv-plugin
   - serverless-python-requirements
 
 custom:
