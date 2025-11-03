@@ -57,9 +57,6 @@ functions:
           method: post
           cors: true
 
-plugins:
-  - serverless-python-requirements
-
 custom:
   pythonRequirements:
     dockerizePip: false
