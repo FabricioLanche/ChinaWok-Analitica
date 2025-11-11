@@ -21,16 +21,17 @@ def handler(event, context):
         query = f"""
         SELECT 
             local_id,
-            DATE(from_iso8601_timestamp(fecha_entrega)) AS fecha,
+            DATE(from_iso8601_timestamp(fecha_entrega_aproximada)) AS fecha,
             COUNT(*) AS total_pedidos,
-            ROUND(SUM(costo), 2) AS revenue_diario
+            ROUND(SUM(costo), 2) AS revenue_diario,
+            ROUND(AVG(costo), 2) AS ticket_promedio
         FROM pedidos
         WHERE local_id = '{local_id}'
-            AND YEAR(from_iso8601_timestamp(fecha_entrega)) = {year}
-            AND MONTH(from_iso8601_timestamp(fecha_entrega)) = {month}
+            AND YEAR(from_iso8601_timestamp(fecha_entrega_aproximada)) = {year}
+            AND MONTH(from_iso8601_timestamp(fecha_entrega_aproximada)) = {month}
         GROUP BY 
             local_id,
-            DATE(from_iso8601_timestamp(fecha_entrega))
+            DATE(from_iso8601_timestamp(fecha_entrega_aproximada))
         ORDER BY fecha ASC;
         """
         

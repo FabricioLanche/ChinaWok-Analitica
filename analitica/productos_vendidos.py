@@ -22,21 +22,22 @@ def handler(event, context):
             SELECT 
                 local_id,
                 pedido_id,
-                producto_nombre
+                producto.nombre AS producto_nombre,
+                producto.cantidad AS cantidad
             FROM pedidos
-            CROSS JOIN UNNEST(productos_nombres) AS t(producto_nombre)
+            CROSS JOIN UNNEST(productos) AS t(producto)
             WHERE local_id = '{local_id}'
         )
         SELECT 
             pe.local_id,
             pe.producto_nombre,
             COUNT(DISTINCT pe.pedido_id) AS pedidos_que_lo_incluyen,
-            COUNT(*) AS unidades_vendidas,
+            CAST(SUM(pe.cantidad) AS INTEGER) AS unidades_vendidas,
             p.categoria,
             ROUND(p.precio, 2) AS precio_unitario_actual,
-            ROUND(COUNT(*) * p.precio, 2) AS revenue_total,
-            p.stock AS stock_disponible,
-            ROUND(COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (), 2) AS porcentaje_ventas
+            ROUND(SUM(pe.cantidad) * p.precio, 2) AS revenue_total,
+            CAST(p.stock AS INTEGER) AS stock_disponible,
+            ROUND(SUM(pe.cantidad) * 100.0 / SUM(SUM(pe.cantidad)) OVER (), 2) AS porcentaje_ventas
         FROM productos_expandidos pe
         LEFT JOIN productos p 
             ON pe.local_id = p.local_id 

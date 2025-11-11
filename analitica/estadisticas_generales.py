@@ -24,11 +24,12 @@ def handler(event, context):
                 SUM(costo) AS revenue_total,
                 MIN(costo) AS pedido_minimo,
                 MAX(costo) AS pedido_maximo,
-                SUM(CASE WHEN status = 'recibido' THEN 1 ELSE 0 END) AS pedidos_completados,
-                SUM(CASE WHEN status = 'enviando' THEN 1 ELSE 0 END) AS pedidos_en_envio,
-                SUM(CASE WHEN status = 'empacando' THEN 1 ELSE 0 END) AS pedidos_empacando,
-                SUM(CASE WHEN status = 'cocinando' THEN 1 ELSE 0 END) AS pedidos_cocinando,
-                SUM(CASE WHEN status = 'eligiendo' THEN 1 ELSE 0 END) AS pedidos_eligiendo
+                AVG(costo) AS ticket_promedio,
+                SUM(CASE WHEN estado = 'recibido' THEN 1 ELSE 0 END) AS pedidos_completados,
+                SUM(CASE WHEN estado = 'enviando' THEN 1 ELSE 0 END) AS pedidos_en_envio,
+                SUM(CASE WHEN estado = 'empacando' THEN 1 ELSE 0 END) AS pedidos_empacando,
+                SUM(CASE WHEN estado = 'cocinando' THEN 1 ELSE 0 END) AS pedidos_cocinando,
+                SUM(CASE WHEN estado = 'eligiendo' THEN 1 ELSE 0 END) AS pedidos_eligiendo
             FROM pedidos
             WHERE local_id = '{local_id}'
             GROUP BY local_id
@@ -38,7 +39,8 @@ def handler(event, context):
                 local_id,
                 COUNT(*) AS total_productos,
                 SUM(stock) AS inventario_total,
-                SUM(CASE WHEN stock > 0 AND stock < 10 THEN 1 ELSE 0 END) AS productos_stock_bajo
+                SUM(CASE WHEN stock > 0 AND stock < 10 THEN 1 ELSE 0 END) AS productos_stock_bajo,
+                SUM(CASE WHEN stock = 0 THEN 1 ELSE 0 END) AS productos_sin_stock
             FROM productos
             WHERE local_id = '{local_id}'
             GROUP BY local_id
@@ -80,7 +82,8 @@ def handler(event, context):
         stats_combos AS (
             SELECT 
                 local_id,
-                COUNT(*) AS total_combos
+                COUNT(*) AS total_combos,
+                SUM(CASE WHEN disponible = true THEN 1 ELSE 0 END) AS combos_disponibles
             FROM combos
             WHERE local_id = '{local_id}'
             GROUP BY local_id
@@ -91,9 +94,12 @@ def handler(event, context):
             l.telefono,
             l.hora_apertura,
             l.hora_finalizacion,
+            l.gerente.nombre AS gerente_nombre,
+            l.gerente.correo AS gerente_correo,
             COALESCE(sp.total_pedidos, 0) AS total_pedidos,
             COALESCE(sp.clientes_unicos, 0) AS clientes_unicos,
             ROUND(COALESCE(sp.revenue_total, 0), 2) AS revenue_total,
+            ROUND(COALESCE(sp.ticket_promedio, 0), 2) AS ticket_promedio,
             ROUND(COALESCE(sp.pedido_minimo, 0), 2) AS pedido_minimo,
             ROUND(COALESCE(sp.pedido_maximo, 0), 2) AS pedido_maximo,
             COALESCE(sp.pedidos_completados, 0) AS pedidos_completados,
@@ -103,8 +109,9 @@ def handler(event, context):
             COALESCE(sp.pedidos_eligiendo, 0) AS pedidos_eligiendo,
             ROUND(COALESCE(sp.pedidos_completados, 0) * 100.0 / NULLIF(sp.total_pedidos, 0), 2) AS tasa_completado_pct,
             COALESCE(spr.total_productos, 0) AS total_productos,
-            COALESCE(spr.inventario_total, 0) AS inventario_total,
+            CAST(COALESCE(spr.inventario_total, 0) AS INTEGER) AS inventario_total,
             COALESCE(spr.productos_stock_bajo, 0) AS productos_stock_bajo,
+            COALESCE(spr.productos_sin_stock, 0) AS productos_sin_stock,
             COALESCE(se.total_empleados, 0) AS total_empleados,
             COALESCE(se.cocineros, 0) AS cocineros,
             COALESCE(se.despachadores, 0) AS despachadores,
@@ -114,6 +121,7 @@ def handler(event, context):
             COALESCE(so.ofertas_activas, 0) AS ofertas_activas,
             ROUND(COALESCE(so.descuento_promedio, 0), 2) AS descuento_promedio_pct,
             COALESCE(sc.total_combos, 0) AS total_combos,
+            COALESCE(sc.combos_disponibles, 0) AS combos_disponibles,
             COALESCE(sr.total_resenas, 0) AS total_resenas,
             ROUND(COALESCE(sr.calificacion_promedio_cliente, 0), 2) AS calificacion_cliente,
             COALESCE(sr.resenas_excelentes, 0) AS resenas_excelentes,

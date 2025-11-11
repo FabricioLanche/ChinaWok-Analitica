@@ -18,21 +18,15 @@ def handler(event, context):
         query = f"""
         WITH pedidos_por_empleado AS (
             SELECT 
-                local_id,
-                empleado_dni,
-                COUNT(DISTINCT pedido_id) AS pedidos_atendidos,
-                SUM(costo) AS revenue_generado
-            FROM (
-                SELECT local_id, pedido_id, cocinero_dni AS empleado_dni, costo
-                FROM pedidos WHERE local_id = '{local_id}'
-                UNION ALL
-                SELECT local_id, pedido_id, despachador_dni, costo
-                FROM pedidos WHERE local_id = '{local_id}'
-                UNION ALL
-                SELECT local_id, pedido_id, repartidor_dni, costo
-                FROM pedidos WHERE local_id = '{local_id}'
-            ) pedidos_expandidos
-            GROUP BY local_id, empleado_dni
+                p.local_id,
+                h.empleado.dni AS empleado_dni,
+                COUNT(DISTINCT p.pedido_id) AS pedidos_atendidos,
+                SUM(p.costo) AS revenue_generado
+            FROM pedidos p
+            CROSS JOIN UNNEST(p.historial_estados) AS t(h)
+            WHERE p.local_id = '{local_id}'
+                AND h.empleado.dni IS NOT NULL
+            GROUP BY p.local_id, h.empleado.dni
         ),
         resenas_por_empleado AS (
             SELECT 
